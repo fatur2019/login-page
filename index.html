@@ -1,119 +1,121 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Area</title>
     <style>
         body {
-            font-family: 'Consolas', monospace;
-            background-color: #000;
-            color: #00FF00;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #3498db, #8e44ad); /* Gradien biru ke ungu */
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            color: #fff; /* Warna teks putih */
         }
         .login-container {
-            background-color: #111;
+            background-color: rgba(255, 255, 255, 0.1); /* Latar belakang putih transparan */
             padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             text-align: center;
-            border: 1px solid #00FF00;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            width: 80%; /* Lebar responsif */
+            max-width: 400px; /* Lebar maksimum */
         }
         h2 {
-            color: #00FF00;
+            color: #fff;
             margin-bottom: 30px;
-            text-shadow: 0 0 5px #00FF00;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
         }
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             text-align: left;
-            width: 300px;
         }
         label {
             display: block;
             margin-bottom: 8px;
-            color: #00FF00;
+            color: #eee;
             font-weight: bold;
         }
         input[type="text"],
         input[type="password"] {
-            width: 100%;
+            width: calc(100% - 20px);
             padding: 12px;
-            border: 1px solid #00FF00;
-            border-radius: 4px;
-            background-color: #222;
-            color: #00FF00;
+            border: none;
+            border-radius: 6px;
+            background-color: rgba(0, 0, 0, 0.2);
+            color: #fff;
             box-sizing: border-box;
-            font-size: 16px;
+            font-size: 1em;
         }
         input::placeholder {
-            color: #00FF0080;
+            color: #ccc;
         }
-        button[type="submit"] {
-            background-color: #00FF00;
-            color: #000;
+        button {
             padding: 14px 30px;
+            background-color: #2ecc71; /* Hijau cerah */
+            color: #fff;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 18px;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-            margin-top: 20px;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            width: 100%;
         }
-        button[type="submit"]:hover {
-            background-color: #00C800;
+        button:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
         }
         #error-message {
-            color: #FF4500;
-            margin-top: 15px;
-            font-size: 16px;
-            text-shadow: 0 0 3px #FF4500;
+            color: #e74c3c; /* Merah */
+            margin-top: 20px;
+            font-size: 0.9em;
         }
-        .success-message {
-            color: #00FF00;
-            margin-top: 15px;
-            font-size: 16px;
-            text-shadow: 0 0 3px #00FF00;
+        #success-message {
+            color: #2ecc71; /* Hijau */
+            margin-top: 20px;
+            font-size: 0.9em;
         }
     </style>
 </head>
 <body>
     <div class="login-container">
         <h2>Login Area</h2>
-        <form onsubmit="validateLogin(event)">
+        <form id="login-form">
             <div class="input-group">
                 <label for="username">Username:</label>
-                <input type="text" id="username" name="username" placeholder="Masukkan username">
+                <input type="text" id="username" name="username" placeholder="Masukkan username" required>
             </div>
             <div class="input-group">
                 <label for="password">Password:</label>
-                <input type="password" id="password" name="password" placeholder="Masukkan password">
+                <input type="password" id="password" name="password" placeholder="Masukkan password" required>
             </div>
             <button type="submit">Login</button>
-            <p id="error-message"></p>
-            <p id="success-message" class="success-message" style="display: none;">Login Berhasil. Mengarahkan...</p>
         </form>
+        <p id="error-message"></p>
+        <p id="success-message" style="display: none;">Login Berhasil. Mengarahkan...</p>
     </div>
 
     <script>
-        function validateLogin(event) {
+        const loginForm = document.getElementById('login-form');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const errorMessage = document.getElementById('error-message');
+        const successMessage = document.getElementById('success-message');
+
+        const correctUsername = "game123";
+        const correctPassword = "game456";
+
+        loginForm.addEventListener('submit', function(event) {
             event.preventDefault();
 
-            const usernameInput = document.getElementById('username');
-            const passwordInput = document.getElementById('password');
-            const errorMessage = document.getElementById('error-message');
-            const successMessage = document.getElementById('success-message');
+            const enteredUsername = usernameInput.value;
+            const enteredPassword = passwordInput.value;
 
-            const correctUsername = "game123";
-            const correctPassword = "game456";
-
-            if (usernameInput.value === correctUsername && passwordInput.value === correctPassword) {
+            if (enteredUsername === correctUsername && enteredPassword === correctPassword) {
                 errorMessage.textContent = "";
                 successMessage.style.display = 'block';
                 setTimeout(() => {
@@ -123,7 +125,7 @@
                 successMessage.style.display = 'none';
                 errorMessage.textContent = "Username atau password salah.";
             }
-        }
+        });
     </script>
 </body>
 </html>
