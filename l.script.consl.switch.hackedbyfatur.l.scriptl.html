@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HACKED BY FATUR</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: black;
+            color: red;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            text-align: center;
+        }
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 8px red;
+        }
+        p {
+            font-size: 1.3em;
+            margin-bottom: 18px;
+        }
+        .critical {
+            color: #ff4500; /* Orange-red */
+            font-weight: bold;
+            font-size: 1.6em;
+            margin-top: 30px;
+            text-shadow: 0 0 5px #ff4500;
+        }
+        /* Efek teks berkedip (merah) */
+        .blink-red {
+            animation: blinker-red 0.8s linear infinite;
+        }
+        @keyframes blinker-red {
+            50% { opacity: 0; }
+        }
+        /* Efek "scrolling text" (merah) */
+        #message-container {
+            height: 80px; /* Sesuaikan tinggi agar tidak terlalu besar di mobile */
+            overflow: hidden;
+            position: relative;
+        }
+        #scrolling-message {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            line-height: 80px; /* Sesuaikan line-height */
+            text-align: center;
+            transform: translateY(100%);
+            animation: scrollText-red 4s linear infinite;
+        }
+        @keyframes scrollText-red {
+            0% { transform: translateY(100%); }
+            100% { transform: translateY(-100%); }
+        }
+        /* Gaya "ASCII Art" dengan nama FATUR */
+        .ascii-art-fatur {
+            white-space: pre-wrap;
+            font-family: 'Monospace', monospace;
+            font-size: 1.5em; /* Ukuran lebih besar agar terlihat di mobile */
+            line-height: 1;
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+<body>
+    <h1>HACKED BY FATUR</h1>
+    <p class="critical blink-red">ACCESS GRANTED (UNAUTHORIZED).</p>
+
+    <div class="ascii-art-fatur">
+██████╗░█████╗░██████╗░
+██╔══██╗██╔══██╗██╔══██╗
+██████╔╝███████║██████╔╝
+██╔══██╗██╔══██║██╔══██╗
+██║░░██║██║░░██║██║░░██║
+╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚═╝
+    </div>
+
+    <div id="message-container">
+        <p id="scrolling-message">Warning: System integrity compromised. FATUR was here.</p>
+    </div>
+
+    <p class="critical">website lemah tolol</p>
+</body>
+</html>

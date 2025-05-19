@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Petualangan Koin</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            overflow: hidden;
+            background-color: #f0e68c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        #game-container {
+            position: relative;
+            width: 400px;
+            height: 600px;
+            border: 2px solid #8b4513;
+            background-color: #d2b48c;
+        }
+        #player {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: blue;
+            border-radius: 50%;
+        }
+        .house {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: green;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 0.8em;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+        .control-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #8b4513;
+            background-color: #d2b48c;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+        #score {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 1.2em;
+            color: #8b4513;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="player" style="left: 190px; top: 290px;"></div>
+        <div class="house" id="house1" style="left: 50px; top: 50px;">🏠</div>
+        <div class="house" id="house2" style="left: 320px; top: 150px;">🏠</div>
+        <div class="house" id="house3" style="left: 100px; top: 450px;">🏠</div>
+        <div id="score">Koin: 0</div>
+    </div>
+
+    <div id="controls">
+        <div class="control-btn" ontouchstart="startMove('up')" ontouchend="stopMove()" onmousedown="startMove('up')" onmouseup="stopMove()" onmouseleave="stopMove()">↑</div>
+        <div>
+            <div class="control-btn" ontouchstart="startMove('left')" ontouchend="stopMove()" onmousedown="startMove('left')" onmouseup="stopMove()" onmouseleave="stopMove()">←</div>
+            <div class="control-btn" ontouchstart="startMove('down')" ontouchend="stopMove()" onmousedown="startMove('down')" onmouseup="stopMove()" onmouseleave="stopMove()">↓</div>
+        </div>
+        <div class="control-btn" ontouchstart="startMove('right')" ontouchend="stopMove()" onmousedown="startMove('right')" onmouseup="stopMove()" onmouseleave="stopMove()">→</div>
+    </div>
+
+    <script>
+        const gameContainer = document.getElementById('game-container');
+        const player = document.getElementById('player');
+        const scoreDisplay = document.getElementById('score');
+        let houses = document.querySelectorAll('.house');
+        let playerX = 190;
+        let playerY = 290;
+        let score = 0;
+        const step = 10;
+        const gameWidth = 400;
+        const gameHeight = 600;
+        const respawnDelay = 3000; // Waktu dalam milidetik sebelum rumah muncul kembali
+        let moveInterval;
+        let currentDirection = null;
+        const collectedHouseIds = new Set();
+
+        function getRandomPosition() {
+            const x = Math.random() * (gameWidth - 30);
+            const y = Math.random() * (gameHeight - 30);
+            return { x, y };
+        }
+
+        function respawnHouse(houseId) {
+            setTimeout(() => {
+                if (!document.getElementById(houseId)) {
+                    const newHouse = document.createElement('div');
+                    newHouse.className = 'house';
+                    newHouse.id = houseId;
+                    const { x, y } = getRandomPosition();
+                    newHouse.style.left = x + 'px';
+                    newHouse.style.top = y + 'px';
+                    newHouse.textContent = '🏠';
+                    gameContainer.appendChild(newHouse);
+                    houses = document.querySelectorAll('.house'); // Perbarui daftar rumah
+                    collectedHouseIds.delete(houseId); // Rumah sudah muncul kembali, hapus dari set yang dikumpulkan
+                }
+            }, respawnDelay);
+        }
+
+        function movePlayer(direction) {
+            switch (direction) {
+                case 'up':
+                    playerY = Math.max(0, playerY - step);
+                    break;
+                case 'down':
+                    playerY = Math.min(gameHeight - 20, playerY + step);
+                    break;
+                case 'left':
+                    playerX = Math.max(0, playerX - step);
+                    break;
+                case 'right':
+                    playerX = Math.min(gameWidth - 20, playerX + step);
+                    break;
+            }
+            player.style.left = playerX + 'px';
+            player.style.top = playerY + 'px';
+            checkCollision();
+        }
+
+        function startMove(direction) {
+            currentDirection = direction;
+            moveInterval = setInterval(() => {
+                movePlayer(currentDirection);
+            }, 100); // Kecepatan gerakan saat ditahan
+        }
+
+        function stopMove() {
+            clearInterval(moveInterval);
+            currentDirection = null;
+        }
+
+        function checkCollision() {
+            houses.forEach(house => {
+                if (house && !collectedHouseIds.has(house.id)) {
+                    const houseRect = house.getBoundingClientRect();
+                    const playerRect = player.getBoundingClientRect();
+
+                    if (playerRect.left < houseRect.right &&
+                        playerRect.right > houseRect.left &&
+                        playerRect.top < houseRect.bottom &&
+                        playerRect.bottom > houseRect.top) {
+                        collectCoin(house);
+                    }
+                }
+            });
+        }
+
+        function collectCoin(house) {
+            score++;
+            scoreDisplay.textContent = `Koin: ${score}`;
+            collectedHouseIds.add(house.id); // Tambahkan ID rumah yang dikumpulkan ke set
+            house.remove();
+            respawnHouse(house.id); // Jadwalkan rumah untuk muncul kembali
+        }
+
+        // Kontrol keyboard untuk desktop
+        document.addEventListener('keydown', (event) => {
+            if (!currentDirection) {
+                currentDirection = event.key.replace('Arrow', '').toLowerCase();
+                moveInterval = setInterval(() => {
+                    movePlayer(currentDirection);
+                }, 100);
+            }
+        });
+
+        document.addEventListener('keyup', (event) => {
+            if (currentDirection === event.key.replace('Arrow', '').toLowerCase()) {
+                stopMove();
+            }
+        });
+    </script>
+</body>
+</html>
